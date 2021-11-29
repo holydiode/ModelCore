@@ -132,7 +132,7 @@ class Level(Node):
 
     def lelvel_equasion(self, t):
         t = int(round(t / delta, 0))
-        if t == 0:
+        if len(self._data_table) == 0:
             self._data_table[0] = self.render_answer(self._strt_level, 0)
 
 
@@ -156,27 +156,32 @@ class Level(Node):
 class Exp_Delay(Level):
     def __init__(self, strt_level, input_rate, average_time):
         super().__init__(strt_level, input_rate, '0')
-        self.parse_free_sybs(input_rate)
+        self.parse_free_sybs(input_rate, average_time)
         self._output_rate = self.exp_delay
-        self._average_time = average_time
+        self._average_time = parse_expr(average_time)
 
     def exp_delay(self, t):
         return self.lelvel_equasion(t) / self._average_time
 
 
 class DeepExPDelay(Node):
-    def __init__(self, start, deep, input_rate, average_time):
+    def __init__(self, start, deep, input_rate, average_time, prefer_thread = '0'):
         super().__init__()
-        self.parse_free_sybs(input_rate, start)
+        self.parse_free_sybs(input_rate, start, prefer_thread)
 
         self._delaylist = []
-        delay = Exp_Delay(start, input_rate, average_time)
+        delay = Exp_Delay(start + ' - ' + prefer_thread + ' * ' + str(average_time) , input_rate, average_time)
         self._delaylist.append(delay)
         for i in range(deep - 1):
-            new_delay = Exp_Delay('0', 'DLE' + str(i), average_time)
-            delay.conect_with(new_delay, 'temp', 'DLE' + str(i))
+            value = '0'
+            if i == deep - 2:
+                value = prefer_thread + ' * ' + str(average_time)
+            new_delay = Exp_Delay(value, 'DLE' + str(i), average_time)
+            delay.conect_with(new_delay, 'value', 'DLE' + str(i))
             delay = new_delay
             self._delaylist.append(delay)
+
+
 
     def lelvel_equasion(self, t):
         return sum(map(lambda exp: exp.lelvel_equasion(t), self._delaylist))
@@ -187,4 +192,5 @@ class DeepExPDelay(Node):
         return self.lelvel_equasion(t)
 
     def plug(self, thread, name=None):
-        return self._delaylist[0].plug(thread=thread, name=name)
+        for delay in self._delaylist:
+            delay.plug(thread=thread, name=name)
