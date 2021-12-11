@@ -2,7 +2,7 @@ from sympy import symbols
 import matplotlib.pyplot as mp
 from model_nodes import Halt, Chouse, Constant, Source, Targer, Level, DeepExPDelay, delta
 
-import cProfile
+
 
 class FacadeModel():
     def __init__(self):
@@ -36,7 +36,7 @@ nc['UOR'] = Level('RSR * (DHR + DUR)', 'RRR', 'SSR')
 nc['IAR'] = Level('AIR * RSR', 'SRR', 'SSR')
 nc['RSR'] = Level('RRR', 'RRR / DRR', 'RSR / DRR')
 
-nc['SSR'] = Chouse('Min(STR,NIR)')
+nc['SSR'] = Chouse('Piecewise(( STR, STR < NIR),(NIR, True))')
 nc['PDR'] = Chouse('RRR + 1/DIR * ((IDR - IAR) + (LDR - LAR) + (UOR - UNR) )')
 
 nc['STR'] = Halt('UOR / DFR')
@@ -69,7 +69,7 @@ nc['RSD'] = Level('RRR', 'RRD/DRD', 'RSD/DRD')
 nc['UOD'] = Level('RRR * (DHD + DUD)', 'RRD', 'SSD')
 nc['IAD'] = Level('AID * RRR', 'SRD', 'SSD')
 
-nc['SSD'] = Chouse('Min(STD, NID)')
+nc['SSD'] = Chouse('Piecewise(( STD, STD < NID),(NID, True))')
 nc['PDD'] = Chouse('RRD + 1/DID * ((IDD - IAD)+(LDD - LAD)+(UOD - UND))')
 
 nc.made_exp_delay('MTD', 'SRD', 1, 'DTD', "SSF", 'DTD * RRR')
@@ -93,8 +93,8 @@ nc['IAF'] = Level('AIF  * RSF', 'SRF', 'SSF')
 nc.made_exp_delay('OPF', 'SRF', 1, 'DPF', "MOF", 'DPF * RRR')
 nc.made_exp_delay('CPF', 'MOF', 1, 'DCF', "MDF", 'DCF * RRR')
 
-nc['SSF'] = Chouse('Min(STF, NIF)')
-nc['MDF'] = Chouse('Min(MWF, ALF)')
+nc['SSF'] = Chouse('Piecewise(( STF, STF < NIF),(NIF, True))')
+nc['MDF'] = Chouse('Piecewise(( MWF, MWF < ALF),(ALF, True))')
 ##############
 
 #входящий поток таваров (т/н)
@@ -104,69 +104,69 @@ nc['RRR'] = Source('Piecewise(( 1000, t < 1), (1100, True) )')
 
 
 #минимальное запаздывание выполнение заказа розничным звеном (н)
-nc['DHR'] = Constant('1')
+nc['DHR'] = Constant(1)
 #минимальное запаздывание выполнение заказа оптовым звеном (н)
-nc['DHD'] = Constant('1')
+nc['DHD'] = Constant(1)
 #минимальное запаздывание выполнение заказа производством (н)
-nc['DHF'] = Constant('1')
+nc['DHF'] = Constant(1)
 
 
 
 #запаздывание выполнения заказов рознечным звеном в связи с отсутсвием товаров на складе (н)
-nc['DUR'] = Constant('0.4')
+nc['DUR'] = Constant(0.4)
 #запаздывание выполнения заказов отовым звеном в связи с отсутсвием товаров на складе (н)
-nc['DUD'] = Constant('0.6')
+nc['DUD'] = Constant(0.6)
 #запаздывание выполнения заказов произдводством в связи с отсутсвием товаров на складе (н)
-nc['DUF'] = Constant('1')
+nc['DUF'] = Constant(1)
 
 
 
 #количество недель, за которое средний темп поставок будет покрыт желаймым запасом на рознечном звене(н)
-nc['AIR'] = Constant('8')
+nc['AIR'] = Constant(8)
 #количество недель, за которое средний темп поставок будет покрыт желаймым запасом на оптовом звене(н)
-nc['AID'] = Constant('6')
+nc['AID'] = Constant(6)
 #количество недель, за которое средний темп поставок будет покрыт желаймым запасом на производстве(н)
-nc['AIF'] = Constant('4')
+nc['AIF'] = Constant(4)
 
 
 
 #усредненные требования к розничному звену (н)
-nc['DRR'] = Constant('8')
+nc['DRR'] = Constant(8)
 #усредненные требования к оптовому звену (н)
-nc['DRD'] = Constant('8')
+nc['DRD'] = Constant(8)
 #усредненные требования к производству (н)
-nc['DRF'] = Constant('8')
+nc['DRF'] = Constant(8)
 
 
 #запаздывание регулирования запасов в рознечном звене(н)
-nc['DIR'] = Constant('4')
+nc['DIR'] = Constant(4)
 #запаздывание регулирования запасов в оптовом звене(н)
-nc['DID'] = Constant('4')
+nc['DID'] = Constant(4)
 #запаздывание регулирования запасов в производстве(н)
-nc['DIF'] = Constant('4')
+nc['DIF'] = Constant(4)
 
 #запаздывание оформление заказов в розничном звене(н)
-nc['DCR'] = Constant('3')
+nc['DCR'] = Constant(3)
 #запаздывание оформление заказов в оптовом звене(н)
-nc['DCD'] = Constant('2')
+nc['DCD'] = Constant(2)
 #запаздывание оформление заказов в производстве(н)
-nc['DCF'] = Constant('1')
+nc['DCF'] = Constant(1)
 
 #почтовые запаздывание в оптовом сегменте(н)
-nc['DMR'] = Constant('0.5')
+nc['DMR'] = Constant(0.5)
 #почтовые запаздывание в розничном сегменте(н)
-nc['DMD'] = Constant('0.5')
+nc['DMD'] = Constant(0.5)
 
 #почтовые запаздывание в розничном сегменте(н)
-nc['DTR'] = Constant('1')
+nc['DTR'] = Constant(1)
 #почтовые запаздывание в оптовом сегменте(н)
-nc['DTD'] = Constant('2')
+nc['DTD'] = Constant(2)
 
 
 #запаздывание на подготовку производства предприятий
-nc['DPF'] = Constant('6')
+nc['DPF'] = Constant(6)
 #Максимальная производящая мощность
-nc['ALF'] = Constant('1500')
+nc['ALF'] = Constant(1050)
 nc['DT'] = Constant(str(delta))
 
 
@@ -175,8 +175,8 @@ nc.auto_connect()
 #print(nc['OPF'].get_out_value(0))
 
 def animation_graphik(nc,nodes_name, lables, colors,y_lab ,max_lenght = 2):
-    mp.ion()
 
+    mp.ion()
 
     fig, ax = mp.subplots()
     mp.autoscale()
@@ -190,10 +190,11 @@ def animation_graphik(nc,nodes_name, lables, colors,y_lab ,max_lenght = 2):
 
     ax.set_ylabel(y_lab)
     ax.set_xlabel('время (недели)')
+    mp.gcf().set_size_inches(18, 6)
 
     mp.legend()
 
-    for delay in range(0, 50, 10):
+    for delay in range(0, 20000, 10):
         tic.append( (delay + max_lenght) * delta)
         if (len(tic) > max_lenght):
             tic.pop(0)
@@ -206,7 +207,6 @@ def animation_graphik(nc,nodes_name, lables, colors,y_lab ,max_lenght = 2):
         for set_index in range(len(dataset)):
             ax.plot(tic, dataset[set_index], label=lables[set_index], color=colors[set_index])
 
-        mp.gcf().set_size_inches(18, 6)
 
         fig.canvas.draw()
         fig.canvas.flush_events()
@@ -223,10 +223,10 @@ def animation_graphik(nc,nodes_name, lables, colors,y_lab ,max_lenght = 2):
 
 
 
-'''
+
 animation_graphik(nc,
-    ['RRR', 'SSF', 'SSD', 'SSR' ],
-    ['Заказы', 'Производство', 'Оптовые продажи', 'Розничные продажи'],
+    ['RRR', 'SSF', 'SSD', 'SSR' , 'SRF'],
+    ['Заказы', 'Производство', 'Оптовые продажи', 'Розничные продажи', 'Реальное производство'],
     ['red', 'blue', 'green', 'black', 'orange'], 'товары в неделю (ед./неделя)'
 )
 '''
@@ -251,3 +251,5 @@ animation_graphik(nc,
     ['Незавершенные заказы потребителей', 'Незавершенные заказы розницы', 'Незавершенные заказы опта'],
     ['red', 'blue', 'green', ], 'заказы на товар (ед.)'
 )
+'''
+

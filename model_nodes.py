@@ -1,9 +1,8 @@
 from sympy import symbols, parse_expr
-
+from sympy.utilities.lambdify import lambdify, implemented_function, lambdastr
 
 time = symbols('t')
 delta = 0.1
-
 
 class Thread():
     def __init__(self, out_node, in_node, type):
@@ -65,16 +64,11 @@ class Halt(Node):
         super().__init__()
         self.parse_free_sybs(operation)
         self._operation_expr = parse_expr(operation)
-        self._operation = lambda t: self._operation_expr.subs({time: t})
+        self._operation =  lambdify((time,*self.free_symbs) ,self._operation_expr, modules=['sympy'])
+
 
     def get_out_value(self, t, type=None):
-        answer = self._operation(t)
-        for symb in self._input_thread:
-            if symb in answer.free_symbols:
-                answer = answer.subs({symb: self._input_thread[symb].value(t)})
-                a = 1
-
-        return answer
+        return self._operation(t, *[ float(self._input_thread[symb].value(t)) for symb in self.free_symbs])
 
 
 class Chouse(Halt):
@@ -99,10 +93,12 @@ class Source(Node):
         super().__init__()
         self.parse_free_sybs(output)
         self._output_exp = parse_expr(output)
-        self._output = lambda t: self._output_exp.subs({time: t})
+
+
+        self._output =  lambdify( time, self._output_exp)
 
     def get_out_value(self, t, type=None):
-        return self.render_answer(self._output(t), t)
+        return self._output(t)
 
 
 class Targer(Node):
@@ -110,10 +106,11 @@ class Targer(Node):
         super().__init__()
         self.parse_free_sybs(input)
         self._input_rate_exp = parse_expr(input)
-        self._input_rate = lambda t: self._input_rate_exp.subs({time: t})
+        self._input_rate = lambdify((time,*self.free_symbs) ,self._input_rate_exp)
+
 
     def get_result(self, t):
-        return self.render_answer(self._input_rate(t), t)
+        return self._input_rate(t, *[float(self._input_thread[symb].value(t)) for symb in self.free_symbs])
 
 
 class Level(Node):
@@ -123,10 +120,10 @@ class Level(Node):
         self._strt_level = parse_expr(strt_level)
 
         self._input_rate_exp = parse_expr(input_rate)
-        self._input_rate = lambda t: self._input_rate_exp.subs({time: t})
+        self._input_rate = lambdify((time,*self.free_symbs) ,self._input_rate_exp)
 
         self._output_rate_exp = parse_expr(output_rate)
-        self._output_rate = lambda t: self._output_rate_exp.subs({time: t})
+        self._output_rate = lambdify((time,*self.free_symbs) ,self._output_rate_exp)
 
         self._data_table = {}
 
@@ -139,8 +136,7 @@ class Level(Node):
         if t not in self._data_table:
             answer = list(self._data_table.values())[-1]
             for cur_t_index in range(list(self._data_table)[-1] + 1, t + 1):
-                temp = self._input_rate((cur_t_index - 1) * delta) - self._output_rate((cur_t_index - 1) * delta)
-                temp = self.render_answer(temp, (cur_t_index - 1) * delta)
+                temp = self._input_rate((cur_t_index - 1) * delta, *[float(self._input_thread[symb].value((cur_t_index - 1) * delta)) for symb in self.free_symbs]) - self._output_rate((cur_t_index - 1) * delta, *[float(self._input_thread[symb].value((cur_t_index - 1) * delta)) for symb in self.free_symbs])
 
                 answer += delta * temp
                 self._data_table[cur_t_index] = answer
@@ -149,7 +145,7 @@ class Level(Node):
 
     def get_out_value(self, t, type=None):
         if type == 'temp':
-            return self.render_answer(self._output_rate(t), t)
+            return self._output_rate(t, *[float(self._input_thread[symb].value(t)) for symb in self.free_symbs])
         return self.lelvel_equasion(t)
 
 
@@ -157,11 +153,16 @@ class Exp_Delay(Level):
     def __init__(self, strt_level, input_rate, average_time):
         super().__init__(strt_level, input_rate, '0')
         self.parse_free_sybs(input_rate, average_time)
+
+        self._input_rate = lambdify((time,*self.free_symbs) ,self._input_rate_exp)
+
         self._output_rate = self.exp_delay
         self._average_time = parse_expr(average_time)
 
-    def exp_delay(self, t):
-        return self.lelvel_equasion(t) / self._average_time
+
+
+    def exp_delay(self, t, *args):
+        return self.lelvel_equasion(t) / self._input_thread[self._average_time].value(t)
 
 
 class DeepExPDelay(Node):
@@ -188,7 +189,7 @@ class DeepExPDelay(Node):
 
     def get_out_value(self, t, type=None):
         if type == 'temp':
-            return self.render_answer(self._delaylist[-1].get_out_value(t, 'temp'), t)
+            return  self._delaylist[-1].get_out_value(t, 'temp')
         return self.lelvel_equasion(t)
 
     def plug(self, thread, name=None):
