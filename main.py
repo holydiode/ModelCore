@@ -304,6 +304,7 @@ class Experement:
             ax.axvline(stable[nm], linestyle='--', color=color)
 
         mp.savefig('Эксперементы/' + self.name + '/' + name + ".png")
+        mp.close('all')
 
     def made_graphik_array(self):
         self.graphik('1',
@@ -357,7 +358,7 @@ class ExperementPlotter:
         file = io.open('templateTable.html', mode='r', encoding="utf-8")
         html_text = file.read()
         file.close()
-        html_text = html_text.replace('{name_data}', self._name)
+        html_text = html_text.replace('{name_data}' , self._name + init_nc()[self._value].get_out_value(0))
         html_text = html_text.replace('{name_param}', self._value)
         for i in range(4):
             for pn in self._default:

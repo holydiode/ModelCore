@@ -1,0 +1,181 @@
+<html>
+	<style type="text/css">
+	   TABLE {
+		width: 1500px; /* Ширина таблицы */
+		border-collapse: collapse; /* Убираем двойные линии между ячейками */
+		margin: auto;
+	   }
+	   TD, TH {
+		padding: 3px; /* Поля вокруг содержимого таблицы */
+		border: 1px solid black; /* Параметры рамки */
+	   }
+	   TH {
+		background: #b0e0e6; /* Цвет фона */
+	   }
+	   
+	 
+
+	</style>
+	<body>
+		<h1 align = 'center'>{name_data}</h1>
+		<img src ='1.png'>
+		<img src ='2.png'>
+		<img src ='3.png'>
+		<img src ='4.png'>
+		<table>
+			<tr>
+				<td colspan="2" rowspan="2">{name_data}</td>
+				<td colspan="2">{name_param}-75%</td>
+				<td colspan="2">{name_param}-50%</td>
+				<td colspan="2">{name_param}+100%</td>
+				<td colspan="2">{name_param}+300%</td>
+			</tr>
+			<tr>
+				<td>d</td>
+				<td>%</td>
+				<td>d</td>
+				<td>%</td>
+				<td>d</td>
+				<td>%</td>
+				<td>d</td>
+				<td>%</td>
+			</tr>
+			<tr>
+				<td rowspan="3">Выход товаров сегмента</td>
+				<td>Розничные продажи</td>
+				<td>{SSR_d_1} н.</td>
+				<td>{SSR_%_1}%</td>
+				<td>{SSR_d_2} н.</td>
+				<td>{SSR_%_2}%</td>
+				<td>{SSR_d_3} н.</td>
+				<td>{SSR_%_3}%</td>
+				<td>{SSR_d_4} н.</td>
+				<td>{SSR_%_4}%</td>
+			</tr>
+			<tr>
+				<td>Оптовые продажи</td>
+				<td>{SSD_d_1} н.</td>
+				<td>{SSD_%_1}%</td>
+				<td>{SSD_d_2} н.</td>
+				<td>{SSD_%_2}%</td>
+				<td>{SSD_d_3} н.</td>
+				<td>{SSD_%_3}%</td>
+				<td>{SSD_d_4} н.</td>
+				<td>{SSD_%_4}%</td>
+			</tr>
+			<tr>
+				<td>Производство</td>
+				<td>{SSF_d_1} н.</td>
+				<td>{SSF_%_1}%</td>
+				<td>{SSF_d_2} н.</td>
+				<td>{SSF_%_2}%</td>
+				<td>{SSF_d_3} н.</td>
+				<td>{SSF_%_3}%</td>
+				<td>{SSF_d_4} н.</td>
+				<td>{SSF_%_4}%</td>
+			</tr>
+			<tr>
+				<td rowspan="2">Выход заказов сегмента</td>
+				<td>Заказы от розницы</td>
+				<td>{RRD_d_1} н.</td>
+				<td>{RRD_%_1}%</td>
+				<td>{RRD_d_2} н.</td>
+				<td>{RRD_%_2}%</td>
+				<td>{RRD_d_3} н.</td>
+				<td>{RRD_%_3}%</td>
+				<td>{RRD_d_4} н.</td>
+				<td>{RRD_%_4}%</td>
+			</tr>
+			<tr>
+				<td>Заказы от опта</td>
+				<td>{RRF_d_1} н.</td>
+				<td>{RRF_%_1}%</td>
+				<td>{RRF_d_2} н.</td>
+				<td>{RRF_%_2}%</td>
+				<td>{RRF_d_3} н.</td>
+				<td>{RRF_%_3}%</td>
+				<td>{RRF_d_4} н.</td>
+				<td>{RRF_%_4}%</td>
+			</tr>
+			<tr>
+				<td rowspan="3">Запасы товара сегментов</td>
+				<td>Запасы на розничных складах</td>
+				<td>{IAR_d_1} н.</td>
+				<td>{IAR_%_1}%</td>
+				<td>{IAR_d_2} н.</td>
+				<td>{IAR_%_2}%</td>
+				<td>{IAR_d_3} н.</td>
+				<td>{IAR_%_3}%</td>
+				<td>{IAR_d_4} н.</td>
+				<td>{IAR_%_4}%</td>
+			</tr>
+			<tr>
+				<td>Запасы на оптовой базе</td>
+				<td>{IAD_d_1} н.</td>
+				<td>{IAD_%_1}%</td>
+				<td>{IAD_d_2} н.</td>
+				<td>{IAD_%_2}%</td>
+				<td>{IAD_d_3} н.</td>
+				<td>{IAD_%_3}%</td>
+				<td>{IAD_d_4} н.</td>
+				<td>{IAD_%_4}%</td>
+			</tr>
+			<tr>
+				<td>Запасы на производстве</td>
+				<td>{IAF_d_1} н.</td>
+				<td>{IAF_%_1}%</td>
+				<td>{IAF_d_2} н.</td>
+				<td>{IAF_%_2}%</td>
+				<td>{IAF_d_3} н.</td>
+				<td>{IAF_%_3}%</td>
+				<td>{IAF_d_4} н.</td>
+				<td>{IAF_%_4}%</td>
+			</tr>
+			<tr>
+				<td rowspan="3">Незавершенные заказы сегмента</td>
+				<td>Незавершенные заказы потребителей</td>
+				<td>{UOR_d_1} н.</td>
+				<td>{UOR_%_1}%</td>
+				<td>{UOR_d_2} н.</td>
+				<td>{UOR_%_2}%</td>
+				<td>{UOR_d_3} н.</td>
+				<td>{UOR_%_3}%</td>
+				<td>{UOR_d_4} н.</td>
+				<td>{UOR_%_4}%</td>
+			</tr>
+			<tr>
+				<td>Незавершенные заказы розницы</td>
+				<td>{UOD_d_1} н.</td>
+				<td>{UOD_%_1}%</td>
+				<td>{UOD_d_2} н.</td>
+				<td>{UOD_%_2}%</td>
+				<td>{UOD_d_3} н.</td>
+				<td>{UOD_%_3}%</td>
+				<td>{UOD_d_4} н.</td>
+				<td>{UOD_%_4}%</td>
+			</tr>
+			<tr>
+				<td>Незавершенные заказы опта</td>
+				<td>{UOF_d_1} н.</td>
+				<td>{UOF_%_1}%</td>
+				<td>{UOF_d_2} н.</td>
+				<td>{UOF_%_2}%</td>
+				<td>{UOF_d_3} н.</td>
+				<td>{UOF_%_3}%</td>
+				<td>{UOF_d_4} н.</td>
+				<td>{UOF_%_4}%</td>
+			</tr>
+			<tr>
+				<td colspan="2">Полная стабилизация</td>
+				<td>{_d_1} н.</td>
+				<td>{_%_1}%</td>
+				<td>{_d_2} н.</td>
+				<td>{_%_2}</td>
+				<td>{_d_3} н.</td>
+				<td>{_%_3}%</td>
+				<td>{_d_4} н.</td>
+				<td>{_%_4}%</td>
+			</tr>
+		</table>
+	</body>
+</html>
